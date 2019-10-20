@@ -28,3 +28,4 @@ Client.iml
 target/
 Service/Service.iml
 binge-watching-service.iml
+utils/utils.iml
