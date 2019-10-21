@@ -6,19 +6,39 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
+import org.bson.Document;
 
 public class User {
     private static final String address = "https://api.reelgood.com/v1/roulette/netflix?nocache=true&amp;content_kind=both&amp;availability=onAnySource";
     private ArrayList<Record> history = null;
-    private Set<String> set = null;
+    private Set<String> watched = null;
     private String userID = null;
+    private DataBase database = null;
 
     User(String userID) {
         this.userID = userID;
         this.history = new ArrayList<Record>();
-        this.set = new HashSet<String>();
+        this.watched = new HashSet<String>();
+        database = BingeDB.getInstance();
+        if (!database.isExsists(this.userID)) {
+            database.setUser(this.userID);
+        }
+        else {
+            ArrayList<Document> docs = database.getHistory(this.userID);
+            Gson gson = new Gson();
+            for (Document doc : docs) {
+                ArrayList<Document> contents = (ArrayList<Document>)doc.get("content");
+                for (Document content : contents) {
+                    Record record = gson.fromJson(content.toJson(), Record.class);
+                    history.add(record);
+                    watched.add(record.getTitle());
+                }
+            }
+        }
+
     }
 
     String getUserID() {
@@ -51,17 +71,17 @@ public class User {
 
     Record getNewContent() {
         Record record = getNewContentHelper();
-        while (set.contains(record.getTitle())) {
+        while (watched.contains(record.getTitle())) {
             record = getNewContentHelper();
         }
-        set.add(record.getTitle());
+        watched.add(record.getTitle());
         history.add(record);
+        database.setContent(this.userID, record);
         return record;
     }
     String getHistory() {
         return history.toString();
     }
-
     void setRate(int rate) {
 
     }
