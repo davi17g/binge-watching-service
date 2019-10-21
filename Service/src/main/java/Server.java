@@ -1,5 +1,4 @@
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import com.google.gson.Gson;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
@@ -17,7 +16,6 @@ public class Server extends WebSocketServer {
 
     private Set<String> connectedUsers = null;
     private HashMap<String, Context> users = null;
-
 
     public Server(InetSocketAddress address) {
         super(address);
@@ -112,11 +110,6 @@ public class Server extends WebSocketServer {
         Gson gson = new Gson();
         String message = gson.toJson(new Response(context.getState().getType(), context.getState().getPrompt()));
         conn.send(message);
-    }
-
-    @Override
-    public void onMessage( WebSocket conn, ByteBuffer message ) {
-        System.out.println("received ByteBuffer from "	+ conn.getRemoteSocketAddress());
     }
 
     @Override
