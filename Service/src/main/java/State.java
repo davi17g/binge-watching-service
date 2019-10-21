@@ -205,6 +205,3 @@ class UserRecommendationState implements State {
         return type;
     }
 }
-
-
-
