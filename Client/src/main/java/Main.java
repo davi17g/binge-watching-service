@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-
 public class Main {
     public static void main(String[] args) throws URISyntaxException, IOException {
         Client client = new Client(new URI("ws://localhost:8887"));

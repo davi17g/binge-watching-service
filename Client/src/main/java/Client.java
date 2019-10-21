@@ -36,7 +36,6 @@ public class Client extends WebSocketClient{
     @Override
     public void onError( Exception ex ) {
         ex.printStackTrace();
-        // if the error is fatal then onClose will be called additionally
     }
 
     public ResponseType getType() throws InterruptedException {
