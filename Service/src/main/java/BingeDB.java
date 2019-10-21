@@ -1,25 +1,16 @@
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Field;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
 public class BingeDB implements DataBase{
 
-    private static final String databaseAddress = "localhost";
     private static final String databaseName = "BingeWatchingDB";
-    private static final int databasePort = 27017;
-    private static final String databaseUserName = "davi17g";
-    private static final String databaseUserPassword = "1234";
     private MongoClient mongo = null;
     private MongoDatabase database = null;
     public static BingeDB instance = null;
@@ -35,7 +26,6 @@ public class BingeDB implements DataBase{
         if (instance == null) {
             instance = new BingeDB();
         }
-
         return instance;
     }
 
@@ -45,6 +35,7 @@ public class BingeDB implements DataBase{
                 "userid", uid
         ).append("content", Collections.emptyList());
         database.getCollection("users").insertOne(doc);
+        System.out.println("set-user id");
     }
 
     @Override
@@ -70,7 +61,14 @@ public class BingeDB implements DataBase{
                 .projection(new Document("content", 1)).into(new ArrayList<Document>());
     }
 
-    public void setContent(String uid, Document doc) {
-//        database.getCollection("users").updateOne(Filters.eq("userid", uid));
+    public void setContent(String uid, Record record) {
+        Document doc = new Document()
+                .append("title", record.getTitle())
+                .append("overview", record.getOverview())
+                .append("released", record.getRelased())
+                .append("rating", record.getRating());
+        database.getCollection("users")
+                .findOneAndUpdate(Filters.eq("userid", uid), Updates.addToSet("content", doc));
+
     }
 }

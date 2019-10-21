@@ -1,13 +1,13 @@
 public class Record {
     private String title = null;
     private String overview = null;
-    private String relased = null;
+    private String released = null;
     private double rating = 0.0;
 
-    public Record(String title, String overview, String relased, double rating) {
+    public Record(String title, String overview, String released, double rating) {
         this.title = title;
         this.overview = overview;
-        this.relased = relased;
+        this.released = released;
         this.rating = rating;
     }
 
@@ -20,7 +20,7 @@ public class Record {
     }
 
     public String getRelased() {
-        return relased;
+        return released;
     }
 
     public double getRating() {
@@ -29,7 +29,7 @@ public class Record {
 
     @Override
     public String toString() {
-        return String.format("title: %s overview: %s relased: %s rating: %.2f",
+        return String.format("\ntitle: %s \noverview: %s \nrelased: %s \nrating: %.2f\n",
                 getTitle(), getOverview(), getRelased(), getRating());
     }
 }
